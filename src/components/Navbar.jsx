@@ -8,7 +8,7 @@ const Navbar = () => {
     { name: "CONTACT", href: "#" },
   ];
   return (
-    <nav className="flex flex-row items-center bg-yellow-400 p-5">
+    <nav className="flex flex-row items-center bg-yellow-400 py-5 px-10">
       <h1 className="flex-1 text-xl font-bold bg-red-400">VENDORA</h1>
       <ul className="flex-1 flex flex-row justify-evenly bg-green-400">
         {navLinks.map((link) => (
