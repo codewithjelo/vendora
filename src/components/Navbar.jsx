@@ -3,14 +3,14 @@ import { Button } from "@/components/ui/button";
 const Navbar = () => {
   const navLinks = [
     { name: "HOME", href: "#" },
-    { name: "ABOUT", href: "#" },
-    { name: "SERVICES", href: "#" },
-    { name: "CONTACT", href: "#" },
+    { name: "SHOP", href: "#" },
+    { name: "CATEGORY", href: "#" },
+    { name: "CART", href: "#" },
   ];
   return (
-    <nav className="flex flex-row items-center bg-yellow-400 py-5 px-10">
-      <h1 className="flex-1 text-xl font-bold bg-red-400">VENDORA</h1>
-      <ul className="flex-1 flex flex-row justify-evenly bg-green-400">
+    <nav className="flex flex-row items-center py-5 xl:px-20 sticky top-0 z-10 bg-background">
+      <h1 className="flex-1 text-xl font-bold">VENDORA</h1>
+      <ul className="flex-1 flex flex-row justify-evenly">
         {navLinks.map((link) => (
           <li key={link.name} className="inline-block mx-4">
             <a href={link.href} className="text-xs font-medium">
@@ -19,7 +19,7 @@ const Navbar = () => {
           </li>
         ))}
       </ul>
-      <div className="flex-1 flex flex-row gap-4 justify-end bg-blue-400">
+      <div className="flex-1 flex flex-row gap-4 justify-end">
         <Button className="text-xs" variant="outline">
           LOGIN
         </Button>
