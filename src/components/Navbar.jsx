@@ -8,7 +8,7 @@ const Navbar = () => {
     { name: "CART", href: "#" },
   ];
   return (
-    <nav className="flex flex-row items-center py-5 xl:px-20 sticky top-0 z-10 bg-background">
+    <nav className="flex flex-row items-center py-5 xl:px-20 sticky top-0 z-30 bg-background/70 backdrop-blur-sm">
       <h1 className="flex-1 text-xl font-bold">VENDORA</h1>
       <ul className="flex-1 flex flex-row justify-evenly">
         {navLinks.map((link) => (
