@@ -4,12 +4,11 @@ const Navbar = () => {
   const navLinks = [
     { name: "HOME", href: "#" },
     { name: "SHOP", href: "#" },
-    { name: "CATEGORY", href: "#" },
     { name: "CART", href: "#" },
   ];
   return (
     <nav className="flex flex-row items-center py-5 xl:px-20 sticky top-0 z-30 bg-background/70 backdrop-blur-sm">
-      <h1 className="flex-1 text-xl font-bold">VENDORA</h1>
+      <a href="#" className="flex-1 text-xl font-bold">VENDORA</a>
       <ul className="flex-1 flex flex-row justify-evenly">
         {navLinks.map((link) => (
           <li key={link.name} className="inline-block mx-4">
