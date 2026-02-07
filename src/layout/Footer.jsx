@@ -5,18 +5,18 @@ import { Facebook, Instagram, Twitter } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="bg-foreground flex flex-col py-20 space-y-20">
+    <footer className="bg-foreground flex flex-col p-4 lg:py-20 space-y-10 lg:space-y-20">
       <div className="grid grid-cols-1 justify-items-center space-y-4">
-        <h1 className="text-4xl font-semibold text-white col-span-2 items-center">
+        <h1 className="text-2xl lg:text-4xl font-semibold text-white col-span-2 items-center">
           Join Our Community
         </h1>
-        <p className="text-md text-stone-300 col-span-2">
+        <p className="text-sm text-wrap lg:text-md text-stone-300 col-span-2">
           Get exclusive access to new collections, special offers, and design
           inspiration.
         </p>
         <div className="flex flex-row gap-2">
-          <Input className="py-2 w-80 grow" placeholder="Enter your email" />
-          <Button variant="outline" className="py-2 px-4 text-md">
+          <Input className="lg:py-2 lg:w-80 grow" placeholder="Enter your email" />
+          <Button variant="outline" className="py-2 px-4 text-sm lg:text-md">
             SUBSCRIBE
           </Button>
         </div>
@@ -24,7 +24,7 @@ const Footer = () => {
 
       <Separator className="bg-stone-600" />
 
-      <div className="grid grid-cols-2 gap-8 place-items-center w-full">
+      <div className="grid grid-cols-2 gap-8 place-items-start lg:place-items-center w-full">
         <div className="flex flex-col gap-4">
           <h1 className="text-md font-bold text-white">SHOP</h1>
           <ul className="flex flex-col gap-2">
