@@ -1,8 +1,8 @@
+import ProductSection from "@/components/shop/ProductSection";
+
 const ShopPage = () => {
     return (
-        <div>
-            puwet
-        </div>
+        <ProductSection />
     );
 }
 
