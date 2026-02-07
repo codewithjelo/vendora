@@ -13,19 +13,21 @@ const HeroSection = () => {
     "https://cdn.pixabay.com/photo/2022/11/22/04/34/black-friday-7608705_1280.jpg",
   ];
   return (
-    <section className="min-h-screen py-20 xl:px-20">
-      <div className="grid grid-cols-1 gap-20">
-        <div className="flex flex-col justify-center space-y-10">
-          <h1 className="text-5xl font-bold">Your One-Stop Shop</h1>
-          <p className="text-lg leading-relaxed w-100">
+    <section className="md:min-h-screen p-4 xl:py-20 xl:px-20">
+      <div className="grid grid-cols-1 gap-10 md:gap-20">
+        <div className="flex flex-col justify-center space-y-4 md:space-y-10">
+          <h1 className="text-4xl md:text-5xl font-bold">Your One-Stop Shop</h1>
+          <p className="text-sm md:text-lg leading-relaxed md:w-100">
             From everyday essentials to unique finds, Vendora makes shopping
             simple, fun, and fast — all in one place, with deals you won’t want
             to miss.
           </p>
-          <Button className="py-7 w-40 text-lg mt-10">SHOP NOW</Button>
+          <Button className="py-5 w-35 md:py-7 md:w-40 text-lg mt-4 md:mt-10">
+            SHOP NOW
+          </Button>
         </div>
         <Carousel
-          className="aspect-[16/3] h-75 w-full col-span-2"
+          className="aspect-[16/3] xl:h-75 w-full col-span-2"
           opts={{
             align: "start",
             loop: true,
@@ -41,12 +43,14 @@ const HeroSection = () => {
           <CarouselContent>
             {imageUrls.map((url, index) => (
               <CarouselItem key={index}>
-                <div className="p-1 flex h-90 items-center justify-center">
-                  <img
-                    className="text-4xl font-semibold object-fill rounded-lg w-full"
-                    src={url}
-                    alt={`Hero image ${index}`}
-                  />
+                <div className="p-1 flex h-30 xl:h-90 items-center justify-center">
+                  <div className="overflow-hidden w-full h-full rounded-lg">
+                    <img
+                      className="w-full"
+                      src={url}
+                      alt={`Hero image ${index}`}
+                    />
+                  </div>
                 </div>
               </CarouselItem>
             ))}
