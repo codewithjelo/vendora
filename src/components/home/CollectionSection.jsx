@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from 'next/navigation';
 import { useState, useEffect } from "react";
 import { Globe, Award, Stars, ArrowRight, Loader2 } from "lucide-react";
 import { productAPI } from "@/services/api";
@@ -13,6 +14,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 const CollectionSection = () => {
+  const router = useRouter();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -74,6 +76,7 @@ const CollectionSection = () => {
             {products.map((product, index) => (
               <Card
                 key={product.id}
+                onClick={() => router.push(`/products/${product.id}`)}
                 className="relative h-100 min-w-[200px] rounded-xs flex-shrink-0 pt-0 md:w-full md:h-full max-w-lg snap-center duration-500 hover:shadow-lg animate-in fade-in slide-in-from-bottom-4"
                 style={{
                   animationDelay: `${index * 50}ms`,
