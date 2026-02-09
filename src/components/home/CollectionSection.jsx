@@ -1,10 +1,11 @@
-import { Globe, Award, Stars, ArrowRight } from "lucide-react";
+"use client";
+import { useState, useEffect } from "react";
+import { Globe, Award, Stars, ArrowRight, Loader2 } from "lucide-react";
+import { productAPI } from "@/services/api";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardAction,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -12,46 +13,103 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 const CollectionSection = () => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await productAPI.getProducts(0, 3);
+      setProducts(data);
+    } catch (err) {
+      setError("Failed to load products. Please try again.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Loader2 className="animate-spin" size={48} />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col justify-center items-center min-h-screen">
+        <p className="text-red-500 mb-4">{error}</p>
+        <button
+          onClick={fetchProducts}
+          className="px-6 py-2 bg-black text-white hover:bg-stone-800 transition-colors"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  if (products.length === 0) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-stone-500">No products found</p>
+      </div>
+    );
+  }
   return (
     <section className="md:min-h-screen py-4 px-4 xl:py-20 xl:px-20">
       <div className="grid grid-cols-1 gap-5 md:gap-20">
         <h1 className="text-2xl md:text-4xl font-bold">FEATURED COLLECTIONS</h1>
 
         <div className="flex flex-row justify-evenly gap-4">
-          <div className="flex flex-row justify-evenly overflow-x-auto py-3 snap-x">
-            {[1, 2, 3, 4].map((item) => (
+          <div className="flex flex-row justify-between overflow-x-auto py-3 gap-5 snap-x">
+            {products.map((product, index) => (
               <Card
-                key={item}
-                className="relative h-100 min-w-[200px] flex-shrink-0 mx-10 pt-0 md:w-full md:h-full max-w-xs snap-center"
+                key={product.id}
+                className="relative h-100 min-w-[200px] rounded-xs flex-shrink-0 pt-0 md:w-full md:h-full max-w-lg snap-center duration-500 hover:shadow-lg animate-in fade-in slide-in-from-bottom-4"
+                style={{
+                  animationDelay: `${index * 50}ms`,
+                  animationFillMode: "backwards",
+                }}
               >
-                <div className="overflow-hidden rounded-t-xl">
+                <div className="overflow-hidden rounded-t-xs">
                   <img
-                    src="https://m.media-amazon.com/images/I/71ubHqDJexL._AC_SL1500_.jpg"
-                    alt="Event cover"
-                    className="aspect-square w-full object-cover brightness-60 grayscale dark:brightness-40 rounded-t-xl transition-transform duration-500 hover:scale-110"
+                    src={product.images[0]}
+                    alt={product.title}
+                    className="aspect-square w-full object-cover brightness-60 grayscale dark:brightness-40 rounded-t-xs transition-transform duration-500 hover:scale-110"
+                    onError={(e) => {
+                      e.target.src =
+                        "https://via.placeholder.com/400?text=No+Image";
+                    }}
                   />
                 </div>
 
                 <CardHeader>
                   <CardAction>
-                    <Badge variant="secondary">Featured</Badge>
+                    <Badge variant="secondary">{product.category.name}</Badge>
                   </CardAction>
-                  <CardTitle>Design systems meetup</CardTitle>
-                  <CardDescription>
-                    A practical talk on component APIs, accessibility, and
-                    shipping faster.
-                  </CardDescription>
+                  <CardTitle className="h-10 text-md font-bold uppercase">
+                    {product.title}
+                  </CardTitle>
                 </CardHeader>
 
                 <CardFooter>
-                  <Button className="w-full">View Event</Button>
+                  <p className="font-semibold w-full">${product.price}</p>
                 </CardFooter>
               </Card>
             ))}
           </div>
         </div>
         <a
-          href="#"
+          href="/shop"
           className="inline-flex justify-center items-center gap-2 text-sm font-medium tracking-wider group"
         >
           VIEW ALL
