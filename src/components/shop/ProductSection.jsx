@@ -138,6 +138,11 @@ const ProductSection = () => {
     setPriceRange({ min: 0, max: Infinity });
   };
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   // Calculate pagination
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -185,8 +190,9 @@ const ProductSection = () => {
     return pages;
   };
 
+  // Display products based on expanded state
   const displayedProducts = isExpanded
-    ? filteredProducts
+    ? paginatedProducts 
     : filteredProducts.slice(0, 3);
 
   if (loading) {
@@ -358,88 +364,81 @@ const ProductSection = () => {
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-3 justify-items-center gap-y-14">
-            {displayedProducts.map((product, index) => (
-              <Card
-                key={product.id}
-                className="relative h-100 min-w-[200px] rounded-xs flex-shrink-0 pt-0 md:w-full md:h-full max-w-lg snap-center duration-500 hover:shadow-lg animate-in fade-in slide-in-from-bottom-4"
-                style={{
-                  animationDelay: `${index * 50}ms`,
-                  animationFillMode: "backwards",
-                }}
-              >
-                <div className="overflow-hidden rounded-t-xs">
-                  <img
-                    src={product.images[0]}
-                    alt={product.title}
-                    className="aspect-square w-full object-cover brightness-60 grayscale dark:brightness-40 rounded-t-xs transition-transform duration-500 hover:scale-110"
-                    onError={(e) => {
-                      e.target.src =
-                        "https://via.placeholder.com/400?text=No+Image";
-                    }}
-                  />
-                </div>
+          <>
+            <div className="grid grid-cols-3 justify-items-center gap-y-14">
+              {displayedProducts.map((product, index) => (
+                <Card
+                  key={product.id}
+                  className="relative h-100 min-w-[200px] rounded-xs flex-shrink-0 pt-0 md:w-full md:h-full max-w-lg snap-center duration-500 hover:shadow-lg animate-in fade-in slide-in-from-bottom-4"
+                  style={{
+                    animationDelay: `${index * 50}ms`,
+                    animationFillMode: "backwards",
+                  }}
+                >
+                  <div className="overflow-hidden rounded-t-xs">
+                    <img
+                      src={product.images[0]}
+                      alt={product.title}
+                      className="aspect-square w-full object-cover brightness-60 grayscale dark:brightness-40 rounded-t-xs transition-transform duration-500 hover:scale-110"
+                      onError={(e) => {
+                        e.target.src =
+                          "https://via.placeholder.com/400?text=No+Image";
+                      }}
+                    />
+                  </div>
 
-                <CardHeader>
-                  <CardAction>
-                    <Badge variant="secondary">{product.category.name}</Badge>
-                  </CardAction>
-                  <CardTitle className="h-10 text-md font-bold uppercase">
-                    {product.title}
-                  </CardTitle>
-                </CardHeader>
+                  <CardHeader>
+                    <CardAction>
+                      <Badge variant="secondary">{product.category.name}</Badge>
+                    </CardAction>
+                    <CardTitle className="h-10 text-md font-bold uppercase">
+                      {product.title}
+                    </CardTitle>
+                  </CardHeader>
 
-                <CardFooter>
-                  <p className="font-semibold w-full">${product.price}</p>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        )}
-
-            <div
-              className={`transition-all duration-500 overflow-hidden ${
-                isExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-              }`}
-            >
-              {isExpanded && totalPages > 1 && (
-                <Pagination className="mt-20">
-                  <PaginationContent>
-                    <PaginationItem>
-                      <PaginationPrevious 
-                        onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-                        className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                      />
-                    </PaginationItem>
-
-                    {getPageNumbers().map((page, index) => (
-                      page === 'ellipsis' ? (
-                        <PaginationItem key={`ellipsis-${index}`}>
-                          <PaginationEllipsis />
-                        </PaginationItem>
-                      ) : (
-                        <PaginationItem key={page}>
-                          <PaginationLink
-                            onClick={() => handlePageChange(page)}
-                            isActive={currentPage === page}
-                            className="cursor-pointer"
-                          >
-                            {page}
-                          </PaginationLink>
-                        </PaginationItem>
-                      )
-                    ))}
-
-                    <PaginationItem>
-                      <PaginationNext 
-                        onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
-                        className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                      />
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
-              )}
+                  <CardFooter>
+                    <p className="font-semibold w-full">${product.price}</p>
+                  </CardFooter>
+                </Card>
+              ))}
             </div>
+            {isExpanded && totalPages > 1 && (
+              <Pagination className="mt-10">
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious 
+                      onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                      className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    />
+                  </PaginationItem>
+
+                  {getPageNumbers().map((page, index) => (
+                    page === 'ellipsis' ? (
+                      <PaginationItem key={`ellipsis-${index}`}>
+                        <PaginationEllipsis />
+                      </PaginationItem>
+                    ) : (
+                      <PaginationItem key={page}>
+                        <PaginationLink
+                          onClick={() => handlePageChange(page)}
+                          isActive={currentPage === page}
+                          className="cursor-pointer"
+                        >
+                          {page}
+                        </PaginationLink>
+                      </PaginationItem>
+                    )
+                  ))}
+
+                  <PaginationItem>
+                    <PaginationNext 
+                      onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                      className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            )}
 
             {/* Show items count when expanded */}
             {isExpanded && (
@@ -447,6 +446,8 @@ const ProductSection = () => {
                 Showing {startIndex + 1}-{Math.min(endIndex, filteredProducts.length)} of {filteredProducts.length} products
               </div>
             )}
+          </>
+        )}
 
         <div className="flex justify-center flex-1">
           <Button
