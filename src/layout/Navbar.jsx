@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
   const navLinks = [
-    { name: "HOME", href: "#" },
-    { name: "SHOP", href: "#" },
-    { name: "CART", href: "#" },
+    { name: "HOME", href: "/" },
+    { name: "SHOP", href: "/shop" },
+    { name: "CART", href: "/cart" },
   ];
   return (
     <nav className="flex flex-row items-center py-5 xl:px-20 sticky top-0 z-30 bg-background/70 backdrop-blur-sm">
