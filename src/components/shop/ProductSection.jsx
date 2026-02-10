@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from 'next/navigation';
 import { useState, useEffect } from "react";
 import { productAPI } from "@/services/api";
 import {
@@ -43,6 +44,7 @@ import {
 } from "@/components/ui/pagination";
 
 const ProductSection = () => {
+  const router = useRouter();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -75,7 +77,7 @@ const ProductSection = () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await productAPI.getProducts(0, 100);
+      const data = await productAPI.getProducts(0, 30);
       setProducts(data);
       setFilteredProducts(data);
 
@@ -244,13 +246,8 @@ const ProductSection = () => {
               {filteredProducts.length > 1 ? "s" : ""}
             </InputGroupAddon>
           </InputGroup>
-          <a href="#" className="ml-auto">
-            <Heart size={24} />
-          </a>
-        </div>
-
         {/* Filter Bar */}
-        <div className="flex flex-wrap gap-2 items-center">
+        <div className="flex flex-wrap gap-2 items-center ml-auto">
           <span className="text-sm font-medium">Filter by:</span>
 
           {/* Category Filter Dropdown */}
@@ -347,6 +344,8 @@ const ProductSection = () => {
             </Button>
           )}
         </div>
+        </div>
+
       </div>
 
       <div className="xl:px-20 xl:py-10 space-y-10">
@@ -369,6 +368,7 @@ const ProductSection = () => {
               {displayedProducts.map((product, index) => (
                 <Card
                   key={product.id}
+                  onClick={() => router.push(`/products/${product.id}`)}
                   className="relative h-100 min-w-[200px] rounded-xs flex-shrink-0 pt-0 md:w-full md:h-full max-w-lg snap-center duration-500 hover:shadow-lg animate-in fade-in slide-in-from-bottom-4"
                   style={{
                     animationDelay: `${index * 50}ms`,
