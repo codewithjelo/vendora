@@ -7,13 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { StarRating } from "@/components/ui/StarRating";
-
-const toTitleCase = (str) => {
-  return str
-    .split(" ")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(" ");
-};
+import { toTitleCase } from "@/utils/helpers";
+import { useFavorites } from "@/contexts/FavoritesContext";
 
 const ProductDetailPage = () => {
   const params = useParams();
@@ -21,7 +16,8 @@ const ProductDetailPage = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const { toggleFavorite, isFavorite } = useFavorites();
+  
   useEffect(() => {
     fetchProduct();
   }, [params.id]);
@@ -46,7 +42,7 @@ const ProductDetailPage = () => {
       </div>
     );
   }
-
+  
   if (error || !product) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen">
@@ -55,7 +51,8 @@ const ProductDetailPage = () => {
       </div>
     );
   }
-
+  const isProductFavorite = isFavorite(product.id);
+  
   return (
     <div className="container flex flex-col min-h-screen mx-auto px-4 py-8">
       <Button
@@ -100,9 +97,17 @@ const ProductDetailPage = () => {
               <ShoppingBasket className="mr-2" size={16} />
               Add to Cart
             </Button>
-            <Button className="flex-1" variant="outline">
-              <Heart className="mr-2" size={16} />
-              Add to Favorites
+            <Button
+              className="flex-1"
+              variant={isProductFavorite ? "default" : "outline"}
+              onClick={() => toggleFavorite(product)}
+            >
+              <Heart
+                className="mr-2"
+                size={16}
+                fill={isProductFavorite ? "currentColor" : "none"}
+              />
+              {isProductFavorite ? "Remove from Favorites" : "Add to Favorites"}
             </Button>
           </div>
         
@@ -120,9 +125,9 @@ const ProductDetailPage = () => {
 
           <div className="flex flex-col gap-1">
             <h1 className="text-stone-600 font-semibold uppercase">Rating</h1>
-            <p className="flex flex-row gap-2 max-w-150 text-stone-600 text-sm">
+            <span className="flex flex-row gap-2 max-w-150 text-stone-600 text-sm">
               {product.rating.rate} <StarRating rating={product.rating.rate} showCount={true} count={product.rating.count} />
-            </p>
+            </span>
           </div>
         </div>
       </div>
