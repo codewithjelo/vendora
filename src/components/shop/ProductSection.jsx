@@ -211,114 +211,6 @@ const ProductSection = () => {
   return (
     <div className="relative flex flex-col min-h-screen">
       <div className="flex flex-col xl:px-20 bg-background p-5 border-y space-y-4">
-        {/* <div className="flex flex-row">
-          <InputGroup className="flex-1 max-w-4xl">
-            <InputGroupInput
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={handleSearchChange}
-            />
-            <InputGroupAddon>
-              <Search />
-            </InputGroupAddon>
-            <InputGroupAddon align="inline-end">
-              {filteredProducts.length} result
-              {filteredProducts.length > 1 ? "s" : ""}
-            </InputGroupAddon>
-          </InputGroup>
-
-          <div className="flex flex-wrap gap-2 items-center ml-auto">
-            <span className="text-sm font-medium">Filter by:</span>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="min-w-[150px] justify-between"
-                >
-                  {selectedCategory === "all"
-                    ? "All Categories"
-                    : toTitleCase(selectedCategory)}
-                  <ChevronDown size={16} className="ml-2" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
-                <DropdownMenuGroup>
-                  <DropdownMenuLabel>Categories</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={() => handleCategoryChange("all")}
-                    className={selectedCategory === "all" ? "bg-accent" : ""}
-                  >
-                    All Categories
-                  </DropdownMenuItem>
-                  {categories.map((category) => (
-                    <DropdownMenuItem
-                      key={category}
-                      onClick={() => handleCategoryChange(category)}
-                      className={
-                        selectedCategory === category ? "bg-accent" : ""
-                      }
-                    >
-                      {toTitleCase(category)}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="min-w-[150px] justify-between"
-                >
-                  {priceRange.min === 0 && priceRange.max === Infinity
-                    ? "All Prices"
-                    : priceRange.max === Infinity
-                      ? `Over $${priceRange.min}`
-                      : `$${priceRange.min}-$${priceRange.max}`}
-                  <ChevronDown size={16} className="ml-2" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
-                <DropdownMenuGroup>
-                  <DropdownMenuLabel>Price Range</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={() => handlePriceFilter(0, Infinity)}
-                  >
-                    All Prices
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handlePriceFilter(0, 50)}>
-                    Under $50
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handlePriceFilter(50, 100)}>
-                    $50 - $100
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handlePriceFilter(100, 200)}>
-                    $100 - $200
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => handlePriceFilter(200, Infinity)}
-                  >
-                    Over $200
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {(searchQuery ||
-              selectedCategory !== "all" ||
-              priceRange.min > 0 ||
-              priceRange.max < Infinity) && (
-              <Button variant="ghost" size="sm" onClick={clearFilters}>
-                <X size={16} className="mr-1" />
-                Clear Filters
-              </Button>
-            )}
-          </div>
-        </div> */}
         <ProductToolbar
           searchQuery={searchQuery}
           onSearchChange={handleSearchChange}
@@ -366,7 +258,7 @@ const ProductSection = () => {
                         "https://via.placeholder.com/400?text=No+Image"
                       }
                       alt={product.title}
-                      className="aspect-square w-full object-cover brightness-60 grayscale dark:brightness-40 rounded-t-xs transition-transform duration-500 hover:scale-110"
+                      className="aspect-square w-full object-cover brightness-60 dark:brightness-40 rounded-t-xs transition-transform duration-500 hover:scale-110"
                       onError={(e) => {
                         e.target.src =
                           "https://via.placeholder.com/400?text=No+Image";
@@ -377,7 +269,7 @@ const ProductSection = () => {
                   <CardHeader>
                     <CardAction>
                       <Badge variant="secondary">
-                        {product.category || "Uncategorized"}
+                        {toTitleCase(product.category || "Uncategorized")}
                       </Badge>
                     </CardAction>
                     <CardTitle className="h-10 text-md font-bold uppercase">
