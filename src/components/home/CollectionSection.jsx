@@ -71,9 +71,9 @@ const CollectionSection = () => {
       <div className="grid grid-cols-1 gap-5 md:gap-20">
         <h1 className="text-2xl md:text-4xl font-bold">FEATURED COLLECTIONS</h1>
 
-        <div className="flex flex-row justify-evenly gap-4">
-          <div className="flex flex-row justify-between overflow-x-auto py-3 gap-5 snap-x">
-            {products.map((product, index) => (
+        <div className="flex">
+          <div className="flex flex-1 justify-between overflow-x-auto py-3 gap-5 snap-x">
+            {products.slice(0, 3).map((product, index) => (
               <Card
                 key={product.id}
                 onClick={() => router.push(`/products/${product.id}`)}
@@ -85,7 +85,7 @@ const CollectionSection = () => {
               >
                 <div className="overflow-hidden rounded-t-xs">
                   <img
-                    src={product.images[0]}
+                    src={product.image}
                     alt={product.title}
                     className="aspect-square w-full object-cover brightness-60 grayscale dark:brightness-40 rounded-t-xs transition-transform duration-500 hover:scale-110"
                     onError={(e) => {
