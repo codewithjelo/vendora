@@ -2,22 +2,25 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { productAPI } from "@/services/api";
-import { Loader2, ArrowLeft } from "lucide-react";
+import { Loader2, ArrowLeft, Heart, ShoppingBasket } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  ButtonGroup,
-  ButtonGroupSeparator,
-  ButtonGroupText,
-} from "@/components/ui/button-group";
+import { Separator } from "@/components/ui/separator";
+import { StarRating } from "@/components/ui/StarRating";
 
-export default function ProductDetailPage() {
+const toTitleCase = (str) => {
+  return str
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+};
+
+const ProductDetailPage = () => {
   const params = useParams();
   const router = useRouter();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     fetchProduct();
@@ -34,10 +37,6 @@ export default function ProductDetailPage() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleQuantityChange = (delta) => {
-    setQuantity((prev) => Math.max(1, prev + delta));
   };
 
   if (loading) {
@@ -59,53 +58,76 @@ export default function ProductDetailPage() {
 
   return (
     <div className="container flex flex-col min-h-screen mx-auto px-4 py-8">
-      <Button variant="ghost" onClick={() => router.back()} className="mb-6 justify-start">
+      <Button
+        variant="ghost"
+        onClick={() => router.back()}
+        className="mb-6 flex-none justify-start mr-auto"
+      >
         <ArrowLeft className="mr-2" size={16} />
         Back
       </Button>
 
-      <div className="flex flex-col gap-10 md:flex-row bg-blue-200">
-        <div>
+      <div className="flex flex-col gap-10 justify-center md:flex-row">
+        <div className="flex flex-col gap-4">
           <img
-            src={product.images[0]}
+            src={product.image}
             alt={product.title}
-            className="w-100 h-100 grayscale object-cover"
+            className="w-full h-120 object-cover border"
           />
+          <div className="flex flex-row gap-4">
+            <img
+              src={product.image}
+              alt={product.title}
+              className="w-70 h-70 flex-1 hue-rotate-90 object-cover border"
+            />
+            <img
+              src={product.image}
+              alt={product.title}
+              className="w-70 h-70 hue-rotate-180 flex-1 object-cover border"
+            />
+          </div>
         </div>
 
-        <div className="flex flex-col flex-1 space-y-4 bg-red-100">
-          <div className="flex flex-row justify-between items-center bg-yellow-400 mt-auto mb-10">
-            <h1 className="text-4xl font-bold uppercase">
-              {product.title}
-            </h1>
-            <Badge variant="secondary">{product.category.name}</Badge>
+        <div className="flex flex-col flex-1 space-y-4 max-w-170">
+          <div className="flex flex-row justify-between mb-20">
+            <h1 className="text-4xl font-bold uppercase">{product.title}</h1>
+            <Badge className="my-auto" variant="secondary">{toTitleCase(product.category)}</Badge>
           </div>
-          <p className="text-4xl font-semibold">
-            ${product.price}
-          </p>
-          <ButtonGroup>
-            <Button
-              className="rounded-xs"
-              size="sm"
-              onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            >
-              -
+          <p className="text-3xl font-semibold">${product.price}</p>
+
+          <div className="flex flex-row gap-4">
+            <Button className="flex-1">
+              <ShoppingBasket className="mr-2" size={16} />
+              Add to Cart
             </Button>
-            <span className="text-lg flex justify-center items-center font-medium w-10">
-              {quantity}
+            <Button className="flex-1" variant="outline">
+              <Heart className="mr-2" size={16} />
+              Add to Favorites
+            </Button>
+          </div>
+        
+          <Separator className="bg-stone-300 my-4" />
+
+          <div className="flex flex-col gap-1">
+            <span className="text-stone-600 font-semibold uppercase">
+              Description
             </span>
-            <Button
-              className="rounded-xs"
-              size="sm"
-              onClick={() => setQuantity(quantity + 1)}
-            >
-              +
-            </Button>
-          </ButtonGroup>
-          <p className="text-stone-600">{product.description}</p>
-          <Button className="w-full">Add to Cart</Button>
+            <p className="max-w-150 text-stone-600 text-sm">
+              {" "}
+              {product.description}
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <h1 className="text-stone-600 font-semibold uppercase">Rating</h1>
+            <p className="flex flex-row gap-2 max-w-150 text-stone-600 text-sm">
+              {product.rating.rate} <StarRating rating={product.rating.rate} showCount={true} count={product.rating.count} />
+            </p>
+          </div>
         </div>
       </div>
     </div>
   );
 }
+
+export default ProductDetailPage;
