@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://api.escuelajs.co/api/v1';
+const API_BASE_URL = 'https://fakestoreapi.com';
 
 export const productAPI = {
   // Get all products
@@ -13,10 +13,10 @@ export const productAPI = {
     }
   },
 
-  // Get products with pagination
-  getProducts: async (offset = 0, limit = 12) => {
+  // Get products with limit (Fake Store API uses 'limit' not 'offset')
+  getProducts: async (limit = 20) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/products?offset=${offset}&limit=${limit}`);
+      const response = await fetch(`${API_BASE_URL}/products?limit=${limit}`);
       if (!response.ok) throw new Error('Failed to fetch products');
       return await response.json();
     } catch (error) {
@@ -38,9 +38,9 @@ export const productAPI = {
   },
 
   // Get products by category
-  getProductsByCategory: async (categoryId) => {
+  getProductsByCategory: async (category) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/categories/${categoryId}/products`);
+      const response = await fetch(`${API_BASE_URL}/products/category/${category}`);
       if (!response.ok) throw new Error('Failed to fetch products');
       return await response.json();
     } catch (error) {
@@ -52,7 +52,7 @@ export const productAPI = {
   // Get all categories
   getCategories: async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/categories`);
+      const response = await fetch(`${API_BASE_URL}/products/categories`);
       if (!response.ok) throw new Error('Failed to fetch categories');
       return await response.json();
     } catch (error) {
