@@ -1,4 +1,6 @@
-import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
+import { Heart } from "lucide-react";
+import { useFavorites } from "@/contexts/FavoritesContext";
 import {
   Card,
   CardAction,
@@ -6,8 +8,29 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { StarRating } from "@/components/ui/StarRating";
 
 const ProductCard = ({ product, index, router, toTitleCase }) => {
+  const { toggleFavorite, isFavorite } = useFavorites();
+  const isProductFavorite = isFavorite(product.id);
+
+  const handleFavoriteClick = (e) => {
+    e.stopPropagation();
+
+    const wasFavorite = isProductFavorite;
+
+    toggleFavorite(product);
+
+    toast(wasFavorite ? "Removed from favorites" : "Added to favorites", {
+      icon: wasFavorite ? (
+        <Heart className="text-foreground" size={15} fill="none" />
+      ) : (
+        <Heart className="text-red-500" size={15} fill="red" />
+      ),
+    });
+  };
+
   return (
     <Card
       key={product.id}
@@ -38,10 +61,25 @@ const ProductCard = ({ product, index, router, toTitleCase }) => {
         <CardTitle className="h-10 text-md font-bold uppercase">
           {product.title}
         </CardTitle>
+
+        {product.rating && (
+          <StarRating
+            rating={product.rating.rate}
+            showCount={true}
+            count={product.rating.count}
+            size={14}
+          />
+        )}
       </CardHeader>
 
       <CardFooter>
         <p className="font-semibold w-full">${product.price}</p>
+          <Heart
+            onClick={handleFavoriteClick}
+            size={24}
+            fill={isProductFavorite ? "red" : "none"}
+            className={isProductFavorite ? "text-red-500" : "text-stone-600" + " transition-colors duration-300 hover:text-red-500"}
+          />
       </CardFooter>
     </Card>
   );
