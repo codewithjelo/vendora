@@ -19,13 +19,6 @@ import {
   X,
 } from "lucide-react";
 
-const toTitleCase = (str) => {
-  return str
-    .split(" ")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(" ");
-};
-
 const ProductToolbar = ({ 
   searchQuery, 
   onSearchChange, 
@@ -35,7 +28,8 @@ const ProductToolbar = ({
   onPriceFilter, 
   categories, 
   clearFilters,
-  filteredProductsCount 
+  filteredProductsCount,
+  toTitleCase
 }) => {
   return (
     <div className="flex flex-row">
