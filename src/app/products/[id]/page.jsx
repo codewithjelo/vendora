@@ -2,13 +2,27 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { productAPI } from "@/services/api";
-import { Loader2, ArrowLeft, Heart, ShoppingBasket } from "lucide-react";
+import {
+  Loader2,
+  ArrowLeft,
+  Heart,
+  ShoppingBasket,
+  Plus,
+  Minus,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import { StarRating } from "@/components/ui/StarRating";
 import { toTitleCase } from "@/utils/helpers";
 import { useFavorites } from "@/contexts/FavoritesContext";
+
+const COLOR_OPTIONS = [
+  { label: "Variant 1", hue: "" },
+  { label: "Variant 2", hue: "hue-rotate-90" },
+  { label: "Variant 3", hue: "hue-rotate-180" },
+];
 
 const ProductDetailPage = () => {
   const params = useParams();
@@ -17,7 +31,10 @@ const ProductDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { toggleFavorite, isFavorite } = useFavorites();
-  
+  const [showCart, setShowCart] = useState(false);
+  const [selectedColor, setSelectedColor] = useState(COLOR_OPTIONS[0]);
+  const [quantity, setQuantity] = useState(1);
+
   useEffect(() => {
     fetchProduct();
   }, [params.id]);
@@ -35,6 +52,40 @@ const ProductDetailPage = () => {
     }
   };
 
+  const handleFavoriteClick = (e) => {
+    e.stopPropagation();
+
+    const wasFavorite = isFavorite(product.id);
+
+    toggleFavorite(product);
+
+    toast(wasFavorite ? "Removed from favorites" : "Added to favorites", {
+      icon: wasFavorite ? (
+        <Heart className="text-foreground" size={15} fill="none" />
+      ) : (
+        <Heart className="text-red-500" size={15} fill="red" />
+      ),
+    });
+  };
+
+  const handleAddToCart = () => {
+    setShowCart(true);
+  };
+
+  const handleIncrement = () => {
+    setQuantity((prev) => prev + 1);
+  };
+
+  const handleDecrement = () => {
+    setQuantity((prev) => {
+      if (prev === 1) {
+        setShowCart(false);
+        return 1;
+      }
+      return prev - 1;
+    });
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -42,7 +93,7 @@ const ProductDetailPage = () => {
       </div>
     );
   }
-  
+
   if (error || !product) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen">
@@ -51,8 +102,9 @@ const ProductDetailPage = () => {
       </div>
     );
   }
+
   const isProductFavorite = isFavorite(product.id);
-  
+
   return (
     <div className="container flex flex-col min-h-screen mx-auto px-4 py-8">
       <Button
@@ -86,21 +138,104 @@ const ProductDetailPage = () => {
         </div>
 
         <div className="flex flex-col flex-1 space-y-4 max-w-170">
-          <div className="flex flex-row justify-between mb-20">
+          <div className="flex flex-row justify-between mb-10">
             <h1 className="text-4xl font-bold uppercase">{product.title}</h1>
-            <Badge className="my-auto" variant="secondary">{toTitleCase(product.category)}</Badge>
+            <Badge className="my-auto" variant="secondary">
+              {toTitleCase(product.category)}
+            </Badge>
           </div>
+
+          {/* Color Options */}
+          <div className="flex flex-col gap-1">
+            <span className="text-stone-600 font-semibold uppercase">
+              Color
+            </span>
+            <div className="flex flex-row gap-3">
+              {COLOR_OPTIONS.map((color) => (
+                <Button
+                  key={color.label}
+                  variant="outline"
+                  onClick={() => setSelectedColor(color)}
+                  className={`p-0 w-10 h-10 rounded-full border-2 transition-all ${
+                    selectedColor.label === color.label
+                      ? "border-black scale-110"
+                      : "border-transparent"
+                  }`}
+                >
+                  <img
+                    src={product.image}
+                    alt={color.label}
+                    className={`w-full h-full  rounded-full object-cover ${color.hue}`}
+                  />
+                </Button>
+              ))}
+            </div>
+          </div>
+
           <p className="text-3xl font-semibold">${product.price}</p>
 
+          <div
+            className={`overflow-hidden transition-all duration-500 ${
+              showCart ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+            }`}
+          >
+            <div className="flex flex-col gap-3 py-3 border rounded-lg px-4">
+              <div className="flex flex-row items-center justify-between">
+                <span className="text-sm font-semibold uppercase text-stone-600">
+                  Color
+                </span>
+                <span className="text-sm text-stone-600">
+                  {selectedColor.label}
+                </span>
+              </div>
+
+              <Separator />
+
+              <div className="flex flex-row items-center justify-between">
+                <span className="text-sm font-semibold uppercase text-stone-600">
+                  Quantity
+                </span>
+                <div className="flex flex-row items-center gap-3">
+                  <button
+                    onClick={handleDecrement}
+                    className="w-7 h-7 rounded-full border flex items-center justify-center hover:bg-stone-100 transition-colors"
+                  >
+                    <Minus size={12} />
+                  </button>
+                  <span className="w-5 text-center font-semibold">
+                    {quantity}
+                  </span>
+                  <button
+                    onClick={handleIncrement}
+                    className="w-7 h-7 rounded-full border flex items-center justify-center hover:bg-stone-100 transition-colors"
+                  >
+                    <Plus size={12} />
+                  </button>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="flex flex-row items-center justify-between">
+                <span className="text-sm font-semibold uppercase text-stone-600">
+                  Subtotal
+                </span>
+                <span className="text-sm font-bold">
+                  ${(product.price * quantity).toFixed(2)}
+                </span>
+              </div>
+            </div>
+          </div>
+
           <div className="flex flex-row gap-4">
-            <Button className="flex-1">
+            <Button className="flex-1" onClick={handleAddToCart}>
               <ShoppingBasket className="mr-2" size={16} />
-              Add to Cart
+              {showCart ? "Update Cart" : "Add to Cart"}
             </Button>
             <Button
               className="flex-1"
               variant={isProductFavorite ? "default" : "outline"}
-              onClick={() => toggleFavorite(product)}
+              onClick={handleFavoriteClick}
             >
               <Heart
                 className="mr-2"
@@ -110,7 +245,7 @@ const ProductDetailPage = () => {
               {isProductFavorite ? "Remove from Favorites" : "Add to Favorites"}
             </Button>
           </div>
-        
+
           <Separator className="bg-stone-300 my-4" />
 
           <div className="flex flex-col gap-1">
@@ -118,7 +253,6 @@ const ProductDetailPage = () => {
               Description
             </span>
             <p className="max-w-150 text-stone-600 text-sm">
-              {" "}
               {product.description}
             </p>
           </div>
@@ -126,13 +260,18 @@ const ProductDetailPage = () => {
           <div className="flex flex-col gap-1">
             <h1 className="text-stone-600 font-semibold uppercase">Rating</h1>
             <span className="flex flex-row gap-2 max-w-150 text-stone-600 text-sm">
-              {product.rating.rate} <StarRating rating={product.rating.rate} showCount={true} count={product.rating.count} />
+              {product.rating.rate}{" "}
+              <StarRating
+                rating={product.rating.rate}
+                showCount={true}
+                count={product.rating.count}
+              />
             </span>
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default ProductDetailPage;
