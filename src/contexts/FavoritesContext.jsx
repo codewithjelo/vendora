@@ -39,6 +39,9 @@ export const FavoritesProvider = ({ children }) => {
   const isFavorite = (productId) => {
     return favorites.some((item) => item.id === productId);
   };
+    const clearFavorites = () => {
+    setFavorites([]);
+  };
 
   return (
     <FavoritesContext.Provider
@@ -49,6 +52,7 @@ export const FavoritesProvider = ({ children }) => {
         toggleFavorite,
         isFavorite,
         favoritesCount: favorites.length,
+        clearFavorites,
       }}
     >
       {children}
