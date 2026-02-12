@@ -17,6 +17,7 @@ import { Separator } from "@/components/ui/separator";
 import { StarRating } from "@/components/ui/StarRating";
 import { toTitleCase } from "@/utils/helpers";
 import { useFavorites } from "@/contexts/FavoritesContext";
+import { useCart } from "@/contexts/CartContext";
 
 const COLOR_OPTIONS = [
   { label: "Variant 1", hue: "" },
@@ -34,6 +35,7 @@ const ProductDetailPage = () => {
   const [showCart, setShowCart] = useState(false);
   const [selectedColor, setSelectedColor] = useState(COLOR_OPTIONS[0]);
   const [quantity, setQuantity] = useState(1);
+  const { addToCart } = useCart();
 
   useEffect(() => {
     fetchProduct();
@@ -70,6 +72,15 @@ const ProductDetailPage = () => {
 
   const handleAddToCart = () => {
     setShowCart(true);
+  };
+
+  const handleUpdateToCart = () => {
+    addToCart(product, quantity, selectedColor.label);
+    toast.success("Added to cart", {
+      icon: <ShoppingBasket className="text-foreground" size={15} />,
+    });
+    setShowCart(false);
+    setQuantity(1);
   };
 
   const handleIncrement = () => {
@@ -228,7 +239,11 @@ const ProductDetailPage = () => {
           </div>
 
           <div className="flex flex-row gap-4">
-            <Button className="flex-1" onClick={handleAddToCart}>
+            <Button
+              className="flex-1"
+              onClick={showCart ? handleUpdateToCart : handleAddToCart}
+              variant="default"
+            >
               <ShoppingBasket className="mr-2" size={16} />
               {showCart ? "Update Cart" : "Add to Cart"}
             </Button>
