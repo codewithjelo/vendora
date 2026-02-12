@@ -15,7 +15,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Search, ChevronDown, X, Heart, ShoppingBasket } from "lucide-react";
+import { Search, ChevronDown, X, Heart
+ } from "lucide-react";
 
 const ProductToolbar = ({
   searchQuery,
