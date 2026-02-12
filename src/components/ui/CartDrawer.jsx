@@ -95,9 +95,6 @@ const CartDrawer = ({ isOpen, onClose }) => {
               <div className="flex flex-col items-center justify-center flex-1 gap-4 text-stone-400">
                 <ShoppingBag size={64} />
                 <p className="text-lg font-medium">Your cart is empty</p>
-                <Button variant="outline" onClick={onClose}>
-                  Browse Products
-                </Button>
               </div>
             ) : (
               <>
