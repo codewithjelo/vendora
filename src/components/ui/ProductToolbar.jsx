@@ -1,3 +1,5 @@
+import { useRouter } from "next/navigation";
+import { useFavorites } from "@/contexts/FavoritesContext";
 import {
   InputGroup,
   InputGroupAddon,
@@ -13,26 +15,25 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import {
-  Search,
-  ChevronDown,
-  X,
-} from "lucide-react";
+import { Search, ChevronDown, X, Heart, ShoppingBasket } from "lucide-react";
 
-const ProductToolbar = ({ 
-  searchQuery, 
-  onSearchChange, 
-  selectedCategory, 
-  onCategoryChange, 
-  priceRange, 
-  onPriceFilter, 
-  categories, 
+const ProductToolbar = ({
+  searchQuery,
+  onSearchChange,
+  selectedCategory,
+  onCategoryChange,
+  priceRange,
+  onPriceFilter,
+  categories,
   clearFilters,
   filteredProductsCount,
-  toTitleCase
+  toTitleCase,
 }) => {
+  const router = useRouter();
+  const { favoritesCount } = useFavorites();
+
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row gap-2">
       {/* Search Bar */}
       <InputGroup className="flex-1 max-w-4xl">
         <InputGroupInput
@@ -48,6 +49,18 @@ const ProductToolbar = ({
           {filteredProductsCount > 1 ? "s" : ""}
         </InputGroupAddon>
       </InputGroup>
+
+      <Button
+        onClick={() => router.push("/favorites")}
+        className="relative"
+      >
+        <Heart size={24} />
+        {favoritesCount > 0 && (
+          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+            {favoritesCount}
+          </span>
+        )}
+      </Button>
 
       {/* Filter Bar */}
       <div className="flex flex-wrap gap-2 items-center ml-auto">
