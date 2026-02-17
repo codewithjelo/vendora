@@ -1,18 +1,41 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import CartDrawer from "@/components/ui/CartDrawer";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const Navbar = () => {
   const [cartOpen, setCartOpen] = useState(false);
   const { cartCount } = useCart();
+  const [user, setUser] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const navLinks = [
     { name: "HOME", href: "/", onClick: () => setCartOpen(false) },
     { name: "SHOP", href: "/shop", onClick: () => setCartOpen(false) },
     { name: "CART", onClick: () => setCartOpen(true) },
   ];
+
+  useEffect(() => {
+    const isLoggedIn = document.cookie.includes("token=loggedin") || document.cookie.includes("token=guest");
+    setLoggedIn(isLoggedIn);
+  }, []);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const handleLogout = () => {
+    document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    localStorage.removeItem("user");
+    setLoggedIn(false);
+    window.location.href = "/";
+  };
 
   return (
     <>
@@ -32,7 +55,10 @@ const Navbar = () => {
                   {link.name}
                 </a>
               ) : (
-                <button onClick={link.onClick} className="relative text-xs font-medium">
+                <button
+                  onClick={link.onClick}
+                  className="relative text-xs font-medium"
+                >
                   {link.name}
                   {cartCount > 0 && (
                     <span className="absolute -top-1 -right-7 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
@@ -45,10 +71,28 @@ const Navbar = () => {
           ))}
         </ul>
         <div className="flex-1 flex flex-row gap-4 justify-end">
-          <Button className="text-xs" variant="outline">
-            LOGIN
-          </Button>
-          <Button className="text-xs">SIGN UP</Button>
+          {!loggedIn ? (
+            <>
+              <Link href="/login">
+                <Button className="text-xs" variant="outline">
+                  LOGIN
+                </Button>
+              </Link>
+              <Button className="text-xs">SIGN UP</Button>
+            </>
+          ) : (
+            <>
+              <Avatar size="lg">
+                <AvatarImage src="/avatar.png" alt="user avatar" />
+                <AvatarFallback
+                  onClick={handleLogout}
+                  className="cursor-pointer"
+                >
+                  {user?.name?.[0] || "U"}
+                </AvatarFallback>
+              </Avatar>
+            </>
+          )}
         </div>
       </nav>
       <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
