@@ -19,7 +19,8 @@ const Navbar = () => {
   ];
 
   useEffect(() => {
-    const isLoggedIn = document.cookie.includes("token=loggedin") || document.cookie.includes("token=guest");
+    const isLoggedIn =
+      document.cookie.includes("token=loggedin")
     setLoggedIn(isLoggedIn);
   }, []);
 
@@ -34,6 +35,7 @@ const Navbar = () => {
     document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     localStorage.removeItem("user");
     setLoggedIn(false);
+    setUser(null);
     window.location.href = "/";
   };
 
@@ -54,7 +56,7 @@ const Navbar = () => {
                 >
                   {link.name}
                 </a>
-              ) : (
+              ) : !loggedIn ? null : (
                 <button
                   onClick={link.onClick}
                   className="relative text-xs font-medium"
@@ -70,18 +72,18 @@ const Navbar = () => {
             </li>
           ))}
         </ul>
-        <div className="flex-1 flex flex-row gap-4 justify-end">
+        <div className="flex-1 flex justify-end">
           {!loggedIn ? (
-            <>
+            <div className={!loggedIn ? "flex flex-row gap-4" : "hidden"}>
               <Link href="/login">
                 <Button className="text-xs" variant="outline">
                   LOGIN
                 </Button>
               </Link>
               <Button className="text-xs">SIGN UP</Button>
-            </>
+            </div>
           ) : (
-            <>
+            <div className={!loggedIn ? "hidden" : null}>
               <Avatar size="lg">
                 <AvatarImage src="/avatar.png" alt="user avatar" />
                 <AvatarFallback
@@ -91,7 +93,7 @@ const Navbar = () => {
                   {user?.name?.[0] || "U"}
                 </AvatarFallback>
               </Avatar>
-            </>
+            </div>
           )}
         </div>
       </nav>

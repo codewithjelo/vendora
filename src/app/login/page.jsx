@@ -7,30 +7,21 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect") || "/"; // fallback to home
+  const redirect = searchParams.get("redirect") || "/";
 
   const handleLogin = (e) => {
     e.preventDefault();
 
-    // simple dummy auth
     if (email === "test@test.com" && password === "123456") {
-      // save user in localStorage
+
       localStorage.setItem("user", JSON.stringify({ name: "John" }));
 
-      // set cookie for middleware
       document.cookie = "token=loggedin; path=/; SameSite=Lax";
 
-      // redirect back or to home
       router.push(redirect);
     } else {
       alert("Invalid credentials");
     }
-  };
-
-  const handleGuest = () => {
-    localStorage.setItem("user", JSON.stringify({ name: "Guest" }));
-    document.cookie = "token=guest; path=/; SameSite=Lax";
-    router.push(redirect);
   };
 
   return (
@@ -64,16 +55,11 @@ export default function Login() {
         >
           Login
         </button>
-
-        {/* Guest Mode Button */}
-        <button
-          type="button"
-          onClick={handleGuest}
-          className="bg-gray-500 text-white p-2 rounded hover:bg-gray-600 mt-2"
-        >
-          Continue as Guest
-        </button>
       </form>
+      <span className="absolute bottom-5 right-5">
+        <p className="italic text-sm text-stone-400">Email: test@test.com</p>
+        <p className="italic text-sm text-stone-400">Password: 123456</p>
+      </span>
     </div>
   );
 }

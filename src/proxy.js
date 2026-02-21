@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 
 export function proxy(request) {
   const token = request.cookies.get("token")?.value;
+  const isAuthenticated = token === "loggedin";
 
-  if (!token) {
+  if (!isAuthenticated) {
     const path = request.nextUrl.pathname;
 
     if (path.startsWith("/shop") || path.startsWith("/products/")) {
