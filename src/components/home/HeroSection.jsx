@@ -1,10 +1,12 @@
 "use client";
+import Link from "next/link";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import Threads from "@/components/Threads";
 import { Button } from "../ui/button";
 
 const HeroSection = () => {
@@ -14,7 +16,12 @@ const HeroSection = () => {
   ];
   return (
     <section className="md:min-h-screen p-4 xl:py-20 xl:px-20">
-      <div className="grid grid-cols-1 gap-10 md:gap-20">
+      <div className="absolute inset-0 z-0">
+        <div className="relative w-full h-600">
+          <Threads amplitude={1} distance={0} />
+        </div>
+      </div>
+      <div className="relative z-10 grid grid-cols-1 gap-10 md:gap-20">
         <div className="flex flex-col justify-center space-y-4 md:space-y-10">
           <h1 className="text-4xl md:text-5xl font-bold">Your One-Stop Shop</h1>
           <p className="text-sm md:text-lg leading-relaxed md:w-100">
@@ -22,9 +29,11 @@ const HeroSection = () => {
             simple, fun, and fast — all in one place, with deals you won’t want
             to miss.
           </p>
+          <Link href="/shop" className="w-max">
           <Button className="py-5 w-35 md:py-7 md:w-40 text-lg mt-4 md:mt-10">
             SHOP NOW
           </Button>
+          </Link>
         </div>
         <Carousel
           className="aspect-[16/3] xl:h-75 w-full col-span-2"
