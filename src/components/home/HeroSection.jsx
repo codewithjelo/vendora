@@ -6,7 +6,6 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import Threads from "@/components/Threads";
 import { Button } from "../ui/button";
 
 const HeroSection = () => {
@@ -17,9 +16,6 @@ const HeroSection = () => {
   return (
     <section className="md:min-h-screen p-4 xl:py-20 xl:px-20">
       <div className="absolute inset-0 z-0">
-        <div className="relative w-full h-600">
-          <Threads amplitude={1} distance={0} />
-        </div>
       </div>
       <div className="relative z-10 grid grid-cols-1 gap-10 md:gap-20">
         <div className="flex flex-col justify-center space-y-4 md:space-y-10">

@@ -33,14 +33,13 @@ export default function Login() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <div className="flex flex-col justify-center items-center min-h-screen">
+      <h2 className="w-full text-3xl text-center font-bold border-b py-5 mb-auto">VENDORA</h2>
       <form
         onSubmit={handleLogin}
-        className="flex flex-col gap-2 p-6 border rounded shadow-md w-150 h-120 mx-4 md:mx-auto"
+        className="flex flex-col gap-2 p-6 mb-auto border rounded shadow-md w-150 h-120 mx-4 md:mx-auto"
       >
-        <h2 className="text-3xl font-bold text-center">
-          VENDORA
-        </h2>
+        <h2 className="text-2xl font-bold text-center mt-5">LOGIN</h2>
 
         <input
           type="email"
@@ -79,14 +78,20 @@ export default function Login() {
           Login
         </Button>
 
-        <Separator className="my-4" />
+        <div className="flex flex-row gap-2 my-4 items-center">
+          <Separator className="flex-1" />
+          <span className="text-stone-400 text-sm">OR</span>
+          <Separator className="flex-1" />
+        </div>
 
         <div className="flex flex-row gap-3">
-          <Button className="flex-1" variant="outline">
+          <Button className="flex flex-row gap-2 flex-1" variant="outline">
             <FacebookIcon fill="text-foreground" size={16} />
+            <p className="text-sm text-foreground">Facebook</p>
           </Button>
-          <Button className="flex-1" variant="outline">
+          <Button className="flex flex-row gap-2 flex-1" variant="outline">
             <FaGoogle className="text-foreground" size={16} />
+            <p className="text-sm text-foreground">Google</p>
           </Button>
         </div>
 
