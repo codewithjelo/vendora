@@ -58,7 +58,7 @@ const ProductCard = ({ product, index, router, toTitleCase }) => {
             {toTitleCase(product.category || "Uncategorized")}
           </Badge>
         </CardAction>
-        <CardTitle className="h-10 text-md font-bold uppercase">
+        <CardTitle className="h-10 text-md font-bold uppercase truncate">
           {product.title}
         </CardTitle>
 
