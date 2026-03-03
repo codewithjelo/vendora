@@ -1,10 +1,13 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { EyeIcon, EyeOff, FacebookIcon } from "lucide-react";
 import { FaGoogle } from "react-icons/fa";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -13,18 +16,17 @@ export default function Login() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/";
+  const { signIn } = useAuth();
 
   const handleLogin = (e) => {
     e.preventDefault();
 
-    if (email === "test@test.com" && password === "123456") {
-      localStorage.setItem("user", JSON.stringify({ name: "John" }));
-
-      document.cookie = "token=loggedin; path=/; SameSite=Lax";
-
+    try {
+      signIn(email, password);
+      toast.success("Welcome back!");
       router.push(redirect);
-    } else {
-      alert("Invalid credentials");
+    } catch (error) {
+      toast.error(error.message);
     }
   };
 
@@ -32,9 +34,15 @@ export default function Login() {
     setShowPassword((prev) => !prev);
   };
 
+  const handleSocialLogin = (provider) => {
+    toast.info(`${provider} login is not implemented yet`);
+  };
+
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen">
-      <h2 className="w-full text-3xl text-center font-bold border-b py-5 mb-auto">VENDORA</h2>
+    <div className="flex flex-col justify-center items-center min-h-screen animation-fadeIn ">
+      <Link href="/" className="w-full text-3xl text-center font-bold border-b py-5 mb-auto">
+        VENDORA
+      </Link>
       <form
         onSubmit={handleLogin}
         className="flex flex-col gap-2 p-6 mb-auto border rounded shadow-md w-150 h-120 mx-4 md:mx-auto"
@@ -46,7 +54,7 @@ export default function Login() {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="border p-2 rounded mt-auto"
+          className="border p-2 rounded mt-auto focus:outline-none focus:ring-2 focus:ring-black"
           required
         />
         <div className="flex flex-row relative">
@@ -55,7 +63,7 @@ export default function Login() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="flex-1 border p-2 rounded"
+            className="flex-1 border p-2 rounded focus:outline-none focus:ring-2 focus:ring-black"
             required
           />
           <button
@@ -85,27 +93,42 @@ export default function Login() {
         </div>
 
         <div className="flex flex-row gap-3">
-          <Button className="flex flex-row gap-2 flex-1" variant="outline">
+          <Button
+            type="button"
+            onClick={() => handleSocialLogin("Facebook")}
+            className="flex flex-row gap-2 flex-1"
+            variant="outline"
+          >
             <FacebookIcon fill="text-foreground" size={16} />
             <p className="text-sm text-foreground">Facebook</p>
           </Button>
-          <Button className="flex flex-row gap-2 flex-1" variant="outline">
+          <Button
+            type="button"
+            onClick={() => handleSocialLogin("Google")}
+            className="flex flex-row gap-2 flex-1"
+            variant="outline"
+          >
             <FaGoogle className="text-foreground" size={16} />
             <p className="text-sm text-foreground">Google</p>
           </Button>
         </div>
 
-        <span className="text-center text-sm text-foreground mt-auto">
-          I don't have an account?
-          <a href="#" className="text-blue-500 hover:underline ml-1">
+        <p className="text-center text-sm text-stone-600 mt-4">
+          I don't have an account?{" "}
+          <Link
+            href="/signup"
+            className="text-foreground font-medium hover:underline"
+          >
             Sign Up
-          </a>
-        </span>
+          </Link>
+        </p>
       </form>
 
-      <span className="absolute bottom-5 right-5">
-        <p className="italic text-sm text-stone-400">Email: test@test.com</p>
-        <p className="italic text-sm text-stone-400">Password: 123456</p>
+      <span className="absolute bottom-5 right-5 text-right">
+        <p className="italic text-sm text-stone-400">
+          Create an account to get started
+        </p>
+        <p className="italic text-sm text-stone-400">or sign up to test</p>
       </span>
     </div>
   );
