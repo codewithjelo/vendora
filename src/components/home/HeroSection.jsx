@@ -15,8 +15,6 @@ const HeroSection = () => {
   ];
   return (
     <section className="md:min-h-screen p-4 xl:py-20 xl:px-20">
-      <div className="absolute inset-0 z-0">
-      </div>
       <div className="relative z-10 grid grid-cols-1 gap-10 md:gap-20">
         <div className="flex flex-col justify-center space-y-4 md:space-y-10">
           <h1 className="text-4xl md:text-5xl font-bold">Your One-Stop Shop</h1>
