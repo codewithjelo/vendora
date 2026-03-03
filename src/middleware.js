@@ -1,13 +1,18 @@
 import { NextResponse } from "next/server";
 
-export function proxy(request) {
+export function middleware(request) {
   const token = request.cookies.get("token")?.value;
   const isAuthenticated = token === "loggedin";
 
   if (!isAuthenticated) {
     const path = request.nextUrl.pathname;
-
     if (path.startsWith("/shop") || path.startsWith("/products/")) {
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("redirect", path);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    if (path.startsWith("/profile")) {
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("redirect", path);
       return NextResponse.redirect(loginUrl);
@@ -18,5 +23,5 @@ export function proxy(request) {
 }
 
 export const config = {
-  matcher: ["/shop/:path*", "/products/:path*"],
+  matcher: ["/shop/:path*", "/products/:path*", "/profile/:path*"],
 };
