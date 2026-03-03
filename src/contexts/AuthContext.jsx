@@ -1,5 +1,7 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { setAuthCookie, removeAuthCookie } from "@/app/actions/auth";
 
 const AuthContext = createContext();
 
@@ -10,27 +12,20 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
+  const router = useRouter();
   const [user, setUser] = useState(null);
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check for existing session on mount
   useEffect(() => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("token="));
-    
-    if (token) {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-      }
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
     }
     setIsLoading(false);
   }, []);
 
-  const signUp = (userData) => {
-    // Check if email already exists
+  const signUp = async (userData) => {
     const existingUser = users.find((u) => u.email === userData.email);
     if (existingUser) {
       throw new Error("Email already registered");
@@ -44,15 +39,15 @@ export const AuthProvider = ({ children }) => {
 
     setUsers((prev) => [...prev, newUser]);
     setUser(newUser);
-
-    // Set cookie and localStorage
-    document.cookie = "token=loggedin; path=/; max-age=86400; SameSite=Lax";
     localStorage.setItem("user", JSON.stringify(newUser));
+
+    await setAuthCookie();
+    router.refresh();
 
     return newUser;
   };
 
-  const signIn = (email, password) => {
+  const signIn = async (email, password) => {
     const foundUser = users.find(
       (u) => u.email === email && u.password === password
     );
@@ -62,20 +57,20 @@ export const AuthProvider = ({ children }) => {
     }
 
     setUser(foundUser);
-
-    // Set cookie and localStorage
-    document.cookie = "token=loggedin; path=/; max-age=86400; SameSite=Lax";
     localStorage.setItem("user", JSON.stringify(foundUser));
+
+    await setAuthCookie();
+    router.refresh();
 
     return foundUser;
   };
 
-  const signOut = () => {
+  const signOut = async () => {
     setUser(null);
-
-    // Clear cookie and localStorage
-    document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     localStorage.removeItem("user");
+
+    await removeAuthCookie();
+    router.refresh();
   };
 
   const updateProfile = (updates) => {
@@ -83,11 +78,8 @@ export const AuthProvider = ({ children }) => {
 
     const updatedUser = { ...user, ...updates };
     setUser(updatedUser);
-    
-    // Update localStorage
     localStorage.setItem("user", JSON.stringify(updatedUser));
 
-    // Update in users array
     setUsers((prev) =>
       prev.map((u) => (u.id === user.id ? updatedUser : u))
     );
