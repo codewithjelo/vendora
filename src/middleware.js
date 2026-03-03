@@ -7,13 +7,13 @@ export function middleware(request) {
   if (!isAuthenticated) {
     const path = request.nextUrl.pathname;
     if (path.startsWith("/shop") || path.startsWith("/products/")) {
-      const loginUrl = new URL("/login", request.url);
+      const loginUrl = new URL("/signin", request.url);
       loginUrl.searchParams.set("redirect", path);
       return NextResponse.redirect(loginUrl);
     }
 
     if (path.startsWith("/profile")) {
-      const loginUrl = new URL("/login", request.url);
+      const loginUrl = new URL("/signin", request.url);
       loginUrl.searchParams.set("redirect", path);
       return NextResponse.redirect(loginUrl);
     }

@@ -86,7 +86,7 @@ const Navbar = () => {
         <div className="flex-1 flex justify-end">
           {!isAuthenticated ? (
             <div className="flex flex-row gap-4">
-              <Link href="/login">
+              <Link href="/signin">
                 <Button className="text-xs" variant="outline">
                   LOGIN
                 </Button>
