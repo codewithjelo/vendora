@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import { FaGoogle } from "react-icons/fa";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 
-export default function Login() {
+function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -39,8 +39,11 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen animation-fadeIn ">
-      <Link href="/" className="w-full text-3xl text-center font-bold border-b py-5 mb-auto">
+    <div className="flex flex-col justify-center items-center min-h-screen animation-fadeIn">
+      <Link
+        href="/"
+        className="w-full text-3xl text-center font-bold border-b py-5 mb-auto"
+      >
         VENDORA
       </Link>
       <form
@@ -75,10 +78,7 @@ export default function Login() {
           </button>
         </div>
 
-        <a
-          href="#"
-          className="text-sm text-right text-stone-600 hover:underline"
-        >
+        <a href="#" className="text-sm text-right text-stone-600 hover:underline">
           Forgot Password?
         </a>
 
@@ -131,5 +131,19 @@ export default function Login() {
         <p className="italic text-sm text-stone-400">or sign up to test</p>
       </span>
     </div>
+  );
+}
+
+export default function Login() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="text-lg">Loading...</div>
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }
